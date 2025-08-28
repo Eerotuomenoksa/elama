@@ -133,17 +133,8 @@ class Game {
         const setupForm = document.getElementById("setupForm");
         const ageInput = document.getElementById("playerAge");
 
-        console.log("Elementit:", {
-            startButton: !!startButton,
-            nextYearButton: !!nextYearButton,
-            restartButton: !!restartButton,
-            setupForm: !!setupForm,
-            ageInput: !!ageInput
-        });
-
         if (startButton) {
             startButton.addEventListener("click", () => this.showCharacterSetup());
-            console.log("Aloita-painikkeen kuuntelija asennettu");
         } else {
             console.error("Aloita-painiketta ei löytynyt!");
         }
@@ -151,24 +142,20 @@ class Game {
         if (setupForm) {
             setupForm.addEventListener("submit", (e) => {
                 e.preventDefault();
-                console.log("Lomake lähetetty, estetään oletustoiminto");
                 this.handleCharacterSetup(e);
             });
-            console.log("Asetuslomakkeen kuuntelija asennettu");
         } else {
             console.error("Asetuslomaketta ei löytynyt!");
         }
 
         if (nextYearButton) {
             nextYearButton.addEventListener("click", () => this.nextYear());
-            console.log("Seuraava vuosi -painikkeen kuuntelija asennettu");
         } else {
             console.error("Seuraava vuosi -painiketta ei löytynyt!");
         }
 
         if (restartButton) {
             restartButton.addEventListener("click", () => this.restart());
-            console.log("Uudelleen-painikkeen kuuntelija asennettu");
         } else {
             console.error("Uudelleen-painiketta ei löytynyt!");
         }
@@ -179,16 +166,10 @@ class Game {
                 const age = parseInt(e.target.value) || 0;
                 const money = age * 500;
                 const moneyElement = document.getElementById("startingMoney");
-                console.log("Ikä muuttui:", age, "Raha:", money);
                 if (moneyElement) {
                     moneyElement.textContent = money.toLocaleString('fi-FI');
-                } else {
-                    console.error("startingMoney-elementtiä ei löytynyt!");
                 }
             });
-            console.log("Ikä-inputin kuuntelija asennettu");
-        } else {
-            console.error("playerAge-inputtia ei löytynyt!");
         }
 
         // Päivitä liukusäätimien arvot
@@ -208,106 +189,43 @@ class Game {
                 input.addEventListener("input", (e) => {
                     value.textContent = e.target.value;
                 });
-            } else {
-                console.warn(`Slider ${slider.id} tai sen arvoa ei löytynyt`);
             }
         });
-
-        console.log("Kaikki tapahtumankuuntelijat asennettu");
     }
 
     showCharacterSetup() {
-        console.log("showCharacterSetup kutsuttu");
-        
-        const instructions = document.getElementById("instructions");
-        const characterSetup = document.getElementById("characterSetup");
-        
-        console.log("Elementit:", {
-            instructions: !!instructions,
-            characterSetup: !!characterSetup
-        });
-        
-        if (instructions) {
-            instructions.classList.add("hidden");
-            console.log("Ohjeet piilotettu");
-        }
-        
-        if (characterSetup) {
-            characterSetup.classList.remove("hidden");
-            console.log("Hahmon asetukset näytetty");
-        }
+        document.getElementById("instructions").classList.add("hidden");
+        document.getElementById("characterSetup").classList.remove("hidden");
         
         // Alusta arvot
         const ageInput = document.getElementById("playerAge");
         const moneyElement = document.getElementById("startingMoney");
-        
         if (ageInput && moneyElement) {
             const age = parseInt(ageInput.value) || 0;
-            const money = age * 500;
-            moneyElement.textContent = money.toLocaleString('fi-FI');
-            console.log("Alustetaan arvot - Ikä:", age, "Raha:", money);
-        } else {
-            console.error("Alustuksessa: ageInput tai moneyElement puuttuu");
+            moneyElement.textContent = (age * 500).toLocaleString('fi-FI');
         }
     }
 
     handleCharacterSetup(e) {
         e.preventDefault();
-        console.log("handleCharacterSetup kutsuttu");
         
         // Hae arvot lomakkeelta
-        const ageInput = document.getElementById("playerAge");
-        const wellbeingInput = document.getElementById("playerWellbeing");
-        const energyInput = document.getElementById("playerEnergy");
-        const socialInput = document.getElementById("playerSocial");
-        const spiritualityInput = document.getElementById("playerSpirituality");
-        const documentsInput = document.getElementById("playerDocuments");
-        const homeInput = document.getElementById("playerHome");
-
-        // Tarkista että kaikki inputit löytyvät
-        const inputs = {
-            age: ageInput,
-            wellbeing: wellbeingInput,
-            energy: energyInput,
-            social: socialInput,
-            spirituality: spiritualityInput,
-            documents: documentsInput,
-            home: homeInput
-        };
-
-        console.log("Input-elementit:", inputs);
-
-        // Hae arvot
-        const age = parseInt(ageInput?.value) || 0;
-        const wellbeing = parseInt(wellbeingInput?.value) || 70;
-        const energy = parseInt(energyInput?.value) || 100;
-        const social = parseInt(socialInput?.value) || 50;
-        const spirituality = parseInt(spiritualityInput?.value) || 50;
-        const documents = parseInt(documentsInput?.value) || 50;
-        const home = parseInt(homeInput?.value) || 50;
-
-        console.log("Haetut arvot:", { age, wellbeing, energy, social, spirituality, documents, home });
+        const age = parseInt(document.getElementById("playerAge").value) || 0;
+        const wellbeing = parseInt(document.getElementById("playerWellbeing").value) || 70;
+        const energy = parseInt(document.getElementById("playerEnergy").value) || 100;
+        const social = parseInt(document.getElementById("playerSocial").value) || 50;
+        const spirituality = parseInt(document.getElementById("playerSpirituality").value) || 50;
+        const documents = parseInt(document.getElementById("playerDocuments").value) || 50;
+        const home = parseInt(document.getElementById("playerHome").value) || 50;
 
         // Luo hahmo annetuilla arvoilla
         this.character = new Character(age, wellbeing, energy, social, spirituality, documents, home);
         this.year = 0;
         this.selectedActions = {};
 
-        console.log("Luotu hahmo:", this.character);
-
         // Piilota asetuslomake ja näytä peli
-        const characterSetup = document.getElementById("characterSetup");
-        const gameArea = document.getElementById("gameArea");
-
-        if (characterSetup) {
-            characterSetup.classList.add("hidden");
-            console.log("Asetuslomake piilotettu");
-        }
-
-        if (gameArea) {
-            gameArea.classList.remove("hidden");
-            console.log("Pelialue näytetty");
-        }
+        document.getElementById("characterSetup").classList.add("hidden");
+        document.getElementById("gameArea").classList.remove("hidden");
         
         this.character.updateCharacterDisplay();
         this.updateStatus();
@@ -403,7 +321,6 @@ class Game {
     }
 
     startGame() {
-        console.log("Peli käynnistyy...");
         document.getElementById("instructions").classList.add("hidden");
         document.getElementById("gameArea").classList.remove("hidden");
         
@@ -422,7 +339,7 @@ class Game {
 
         statusInfo.innerHTML = `
             <div class="statusItem">
-                <strong>Vuosi:</strong> ${this.year}
+                <strong>Pelin vuosi:</strong> ${this.year}
             </div>
             <div class="statusItem">
                 <strong>Elämänvaihe:</strong> ${this.character.lifeStage}
@@ -629,10 +546,39 @@ class Game {
             { name: "Taidekilpailuvoitto", wellbeing: 25, money: 30 },
             { name: "Henkinen herätys", spirituality: 20, wellbeing: 15 },
             { name: "Kotivarkaus", home: -30, wellbeing: -20 },
-            { name: "Asiakirjojen katoaminen", documents: -25, wellbeing: -10 }
+            { name: "Asiakirjojen katoaminen", documents: -25, wellbeing: -10 },
+            { name: "Lottovoitto", money: 200, wellbeing: 20 },
+            { name: "Urakehitys", money: 150, energy: -30 },
+            { name: "Lomamatka", wellbeing: 30, money: -100, home: 10 },
+            { name: "Virkistys", energy: 30, wellbeing: 15 },
+            { name: "Uusi harrastus", wellbeing: 20, money: -50 },
+            { name: "Vanhempien terveys", health: 10, wellbeing: 10 },
+            { name: "Perhejuhla", social: 30, wellbeing: 25, home: 15 },
+            { name: "Henkinen kriisi", spirituality: -30, wellbeing: -25 },
+            { name: "Kodin remontti", home: 30, money: -200 },
+            { name: "Asiakirjojen järjestyminen", documents: 30, wellbeing: 10 },
+            { name: "Liikuntavamman", health: 15, energy: -20 },
+            { name: "Meditaatio-retreatti", spirituality: 30, wellbeing: 20, money: -100 },
+            { name: "Verenpainetauti", health: -25, wellbeing: -15 },
+            { name: "Yllätysjuhla", wellbeing: 25, social: 20, money: -80 },
+            { name: "Uusi taito", knowledge: 25, energy: -15 },
+            { name: "Säästöpankki avaa", money: 300, wellbeing: 10 },
+            { name: "Terveysneuvonta", health: 20, money: -50 },
+            { name: "Ystävä muuttaa pois", social: -20, wellbeing: -15 },
+            { name: "Työpaikka menetetty", money: -100, wellbeing: -20 },
+            { name: "Lempiloma", wellbeing: 35, money: -150, home: 20 },
+            { name: "Henkinen valaistuminen", spirituality: 40, wellbeing: 30, bioAge: -0.5 },
+            { name: "Kodin myynti", home: -50, money: 500, wellbeing: -30 },
+            { name: "Perinnönjako", money: -200, social: 15, wellbeing: -10 },
+            { name: "Uusi perheenjäsen", social: 25, wellbeing: 20, money: -100 },
+            { name: "Eläinlääkärikäynti", money: -80, health: 15 },
+            { name: "Vapaaehtoinen työ", money: 200, energy: -40 },
+            { name: "Hengellinen retriitti", spirituality: 35, wellbeing: 25, money: -150 },
+            { name: "Kodin siivous", home: 20, wellbeing: 10 },
+            { name: "Digitaalinen detox", documents: -20, wellbeing: 15, social: -10 }
         ];
 
-        if (Math.random() < 0.3) {
+        if (Math.random() < 0.4) { // 40% mahdollisuus satunnaiselle tapahtumalle
             const event = events[Math.floor(Math.random() * events.length)];
             this.addLogEntry(`SATUNNAINEN TAPAHTUMA: ${event.name}`);
 
@@ -704,7 +650,7 @@ class Game {
         if (type) {
             entry.classList.add(type);
         }
-        entry.textContent = `[Vuosi ${this.year}] ${message}`;
+        entry.textContent = `[Pelin vuosi ${this.year}] ${message}`;
         logContent.appendChild(entry);
         logContent.scrollTop = logContent.scrollHeight;
     }
@@ -726,7 +672,7 @@ class Game {
 
         document.getElementById("finalStats").innerHTML = `
             <p><strong>Kuolit ${this.character.age} vuotiaana</strong> (biologinen ikä ${this.character.bioAge.toFixed(1)} vuotta)</p>
-            <p>Elit ${this.year} vuotta</p>
+            <p>Peli kesti ${this.year} vuotta</p>
             <p>Loppu hyvinvointi: ${this.character.wellbeing.toFixed(1)}/100</p>
             <p>Loppu terveys: ${this.character.health.toFixed(1)}/100</p>
             <p>Loppu rahat: ${this.character.money.toLocaleString('fi-FI')} €</p>
@@ -739,7 +685,6 @@ class Game {
     }
 
     restart() {
-        console.log("Käynnistetään peli uudelleen");
         document.getElementById("gameOverScreen").classList.add("hidden");
         document.getElementById("instructions").classList.remove("hidden");
         document.getElementById("characterSetup").classList.add("hidden");
