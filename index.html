@@ -22,31 +22,114 @@
             <button id="startButton">Aloita peli</button>
         </div>
         
-        <div id="gameArea" class="hidden">
-            <div id="characterDisplay">
-                <div id="characterContainer">
-                    <div id="characterHead"></div>
-                    <div id="characterBody"></div>
-                    <div id="characterArms"></div>
-                    <div id="characterLegs"></div>
+        <div id="characterSetup" class="hidden">
+            <h2>Aseta hahmosi tiedot</h2>
+            <form id="setupForm">
+                <div class="form-group">
+                    <label for="playerAge">Ikä:</label>
+                    <input type="number" id="playerAge" min="0" max="100" value="25" required>
+                    <small>Ikäsi vuosina (0-100)</small>
                 </div>
-                <div id="characterInfo"></div>
+                
+                <div class="form-group">
+                    <label for="playerWellbeing">Hyvinvointi:</label>
+                    <input type="range" id="playerWellbeing" min="0" max="100" value="70" required>
+                    <span id="wellbeingValue">70</span>/100
+                    <small>Kuinka hyvin voit?</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="playerEnergy">Energia:</label>
+                    <input type="range" id="playerEnergy" min="0" max="100" value="100" required>
+                    <span id="energyValue">100</span>/100
+                    <small>Kuinka paljon energiaa sinulla on?</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="playerSocial">Sosiaaliset siteet:</label>
+                    <input type="range" id="playerSocial" min="0" max="100" value="50" required>
+                    <span id="socialValue">50</span>/100
+                    <small>Kuinka vahvat sosiaaliset suhteesi ovat?</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="playerSpirituality">Hengellisyys:</label>
+                    <input type="range" id="playerSpirituality" min="0" max="100" value="50" required>
+                    <span id="spiritualityValue">50</span>/100
+                    <small>Kuinka hengellinen olet?</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="playerDocuments">Asiakirjojen järjestys:</label>
+                    <input type="range" id="playerDocuments" min="0" max="100" value="50" required>
+                    <span id="documentsValue">50</span>/100
+                    <small>Kuinka hyvin asiakirjasi ovat järjestyksessä?</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="playerHome">Koti:</label>
+                    <input type="range" id="playerHome" min="0" max="100" value="50" required>
+                    <span id="homeValue">50</span>/100
+                    <small>Kuinka hyvä kotisi on?</small>
+                </div>
+                
+                <div class="money-info">
+                    <p>Aloitusraha: <span id="startingMoney">12 500</span> €</p>
+                    <small>(500 € per ikävuosi)</small>
+                </div>
+                
+                <button type="submit">Aloita peli</button>
+            </form>
+        </div>
+        
+        <div id="gameArea" class="hidden">
+            <div id="topSection">
+                <div id="characterSection">
+                    <div id="characterDisplay">
+                        <div id="characterContainer">
+                            <div id="characterHead"></div>
+                            <div id="characterBody"></div>
+                            <div id="characterArms"></div>
+                            <div id="characterLegs"></div>
+                            <!-- Visuaaliset elementit -->
+                            <div id="medicalTools" class="hidden">
+                                <div class="scale"></div>
+                                <div class="heightMeasure"></div>
+                                <div class="bloodPressure"></div>
+                            </div>
+                            <div id="exerciseEquipment" class="hidden">
+                                <div class="dumbbell"></div>
+                            </div>
+                            <div id="studyItems" class="hidden">
+                                <div class="book"></div>
+                            </div>
+                            <div id="workItems" class="hidden">
+                                <div class="computer"></div>
+                            </div>
+                        </div>
+                        <div id="characterInfo"></div>
+                    </div>
+                    <div id="nextYearContainer">
+                        <button id="nextYearButton">Seuraava vuosi</button>
+                    </div>
+                </div>
+                
+                <div id="statusPanel">
+                    <h2>Tilanne</h2>
+                    <div id="statusInfo"></div>
+                </div>
             </div>
             
-            <div id="statusPanel">
-                <h2>Tilanne</h2>
-                <div id="statusInfo"></div>
-            </div>
-            
-            <div id="actionsPanel">
-                <h2>Toiminnot</h2>
-                <div id="actionsList"></div>
-                <button id="nextYearButton">Seuraava vuosi</button>
-            </div>
-            
-            <div id="eventLog">
-                <h2>Tapahtumat</h2>
-                <div id="logContent"></div>
+            <div id="bottomSection">
+                <div id="actionsPanel">
+                    <h2>Toiminnot</h2>
+                    <div id="actionsList"></div>
+                </div>
+                
+                <div id="eventLog">
+                    <h2>Tapahtumat</h2>
+                    <div id="logContent"></div>
+                </div>
             </div>
         </div>
         

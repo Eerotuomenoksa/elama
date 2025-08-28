@@ -8,7 +8,7 @@ body {
 }
 
 .container {
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 0 auto;
     background-color: rgba(255, 255, 255, 0.95);
     padding: 25px;
@@ -47,22 +47,130 @@ h2 {
     margin-bottom: 8px;
 }
 
+/* Hahmon asetukset */
+#characterSetup {
+    background-color: #f8f9fa;
+    padding: 30px;
+    border-radius: 15px;
+    margin-bottom: 30px;
+    border-left: 5px solid #1a2a6c;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+#characterSetup h2 {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.form-group {
+    margin-bottom: 25px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #1a2a6c;
+}
+
+.form-group input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid #dee2e6;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+}
+
+.form-group input[type="number"]:focus {
+    outline: none;
+    border-color: #1a2a6c;
+}
+
+.form-group input[type="range"] {
+    width: 100%;
+    margin: 10px 0;
+}
+
+.form-group small {
+    display: block;
+    color: #6c757d;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+.money-info {
+    background-color: #e9ecef;
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+    margin: 20px 0;
+}
+
+.money-info p {
+    font-size: 18px;
+    font-weight: bold;
+    color: #1a2a6c;
+    margin: 0;
+}
+
+.money-info small {
+    color: #6c757d;
+}
+
+#characterSetup button[type="submit"] {
+    background: linear-gradient(135deg, #b21f1f, #e74c3c);
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    width: 100%;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+#characterSetup button[type="submit"]:hover {
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 8px rgba(0,0,0,0.15);
+}
+
 #gameArea {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: auto auto auto;
+    display: flex;
+    flex-direction: column;
     gap: 20px;
 }
 
-/* Hahmon näyttö */
-#characterDisplay {
-    grid-column: span 2;
+#topSection {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+#bottomSection {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+/* Hahmo- ja painikeosio */
+#characterSection {
     background: linear-gradient(135deg, #f8f9fa, #e9ecef);
     padding: 20px;
     border-radius: 15px;
-    text-align: center;
     box-shadow: 0 5px 15px rgba(0,0,0,0.1);
     border: 2px solid #dee2e6;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#characterDisplay {
+    text-align: center;
+    margin-bottom: 20px;
 }
 
 #characterContainer {
@@ -122,6 +230,115 @@ h2 {
     border-radius: 0 0 10px 10px;
     z-index: 1;
     transition: all 0.5s ease;
+}
+
+/* Visuaaliset elementit */
+#medicalTools {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.scale {
+    position: absolute;
+    bottom: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 20px;
+    background-color: #6c757d;
+    border-radius: 5px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.heightMeasure {
+    position: absolute;
+    top: -30px;
+    left: 70px;
+    width: 5px;
+    height: 200px;
+    background: linear-gradient(to bottom, #28a745, #17a2b8);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.bloodPressure {
+    position: absolute;
+    top: 20px;
+    right: -30px;
+    width: 25px;
+    height: 25px;
+    background-color: #dc3545;
+    border-radius: 50%;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+#exerciseEquipment {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.dumbbell {
+    position: absolute;
+    top: 80px;
+    right: -20px;
+    width: 40px;
+    height: 15px;
+    background-color: #6c757d;
+    border-radius: 10px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+#studyItems {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.book {
+    position: absolute;
+    top: 50px;
+    left: -25px;
+    width: 20px;
+    height: 30px;
+    background-color: #6610f2;
+    border-radius: 3px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+#workItems {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.computer {
+    position: absolute;
+    bottom: -20px;
+    right: -30px;
+    width: 35px;
+    height: 25px;
+    background-color: #17a2b8;
+    border-radius: 3px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
 }
 
 /* Hahmon elämänvaiheiden muutokset */
@@ -213,6 +430,25 @@ h2 {
     width: 55px;
     height: 55px;
     top: 125px;
+}
+
+/* Visuaalisten elementtien animaatiot */
+.show-medical .scale,
+.show-medical .heightMeasure,
+.show-medical .bloodPressure {
+    opacity: 1;
+}
+
+.show-exercise .dumbbell {
+    opacity: 1;
+}
+
+.show-study .book {
+    opacity: 1;
+}
+
+.show-work .computer {
+    opacity: 1;
 }
 
 /* Hahmon animaatiot */
@@ -327,6 +563,33 @@ h2 {
     margin-top: 10px;
 }
 
+/* Seuraava vuosi -painike hahmon alla */
+#nextYearContainer {
+    width: 100%;
+    text-align: center;
+    margin-top: 15px;
+}
+
+#nextYearButton {
+    background: linear-gradient(135deg, #b21f1f, #e74c3c);
+    color: white;
+    border: none;
+    padding: 15px 25px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    width: 200px;
+}
+
+#nextYearButton:hover {
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 8px rgba(0,0,0,0.15);
+}
+
 #statusPanel, #actionsPanel, #eventLog {
     background-color: #f8f9fa;
     padding: 20px;
@@ -335,8 +598,7 @@ h2 {
 }
 
 #eventLog {
-    grid-column: span 2;
-    max-height: 200px;
+    max-height: 300px;
     overflow-y: auto;
 }
 
@@ -381,6 +643,9 @@ h2 {
 .moneyBar { background-color: #6c757d; }
 .knowledgeBar { background-color: #6610f2; }
 .socialBar { background-color: #e83e8c; }
+.spiritualityBar { background-color: #6f42c1; }
+.documentsBar { background-color: #20c997; }
+.homeBar { background-color: #fd7e14; }
 
 .statusValue {
     font-weight: bold;
@@ -469,7 +734,7 @@ h2 {
     color: #dc3545;
 }
 
-#nextYearButton, #startButton, #restartButton {
+#startButton, #restartButton {
     background: linear-gradient(135deg, #b21f1f, #e74c3c);
     color: white;
     border: none;
@@ -482,7 +747,7 @@ h2 {
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
 
-#nextYearButton:hover, #startButton:hover, #restartButton:hover {
+#startButton:hover, #restartButton:hover {
     background: linear-gradient(135deg, #e74c3c, #c0392b);
     transform: translateY(-2px);
     box-shadow: 0 6px 8px rgba(0,0,0,0.15);
@@ -492,7 +757,7 @@ h2 {
     background-color: #f1f3f5;
     padding: 15px;
     border-radius: 8px;
-    max-height: 150px;
+    max-height: 250px;
     overflow-y: auto;
     border: 1px solid #dee2e6;
 }

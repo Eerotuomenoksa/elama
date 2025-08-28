@@ -1,13 +1,16 @@
 class Character {
-    constructor() {
-        this.age = 0;
-        this.bioAge = 0;
-        this.wellbeing = 70;
-        this.money = 200; // Lisätty lähtösaldo
-        this.energy = 100;
+    constructor(age = 0, wellbeing = 70, energy = 100, social = 50, spirituality = 50, documents = 50, home = 50) {
+        this.age = age;
+        this.bioAge = age;
+        this.wellbeing = wellbeing;
+        this.money = age * 500; // 500€ per ikävuosi
+        this.energy = energy;
         this.knowledge = 0;
-        this.social = 50;
+        this.social = social;
         this.health = 80;
+        this.spirituality = spirituality;
+        this.documents = documents;
+        this.home = home;
         this.lifeStage = "Lapsuus";
         this.alive = true;
         this.achievements = [];
@@ -44,10 +47,8 @@ class Character {
         const characterInfo = document.getElementById("characterInfo");
         
         if (characterContainer) {
-            // Poista kaikki elämänvaihe-luokat
             characterContainer.classList.remove("child", "teenager", "adult", "elderly");
             
-            // Lisää oikea elämänvaihe-luokka
             if (this.age < 13) {
                 characterContainer.classList.add("child");
             } else if (this.age < 20) {
@@ -76,12 +77,22 @@ class Character {
         if (this.wellbeing > 70) agingRate -= 0.15;
         if (this.knowledge > 50) agingRate -= 0.1;
         if (this.social > 60) agingRate -= 0.1;
+        if (this.spirituality > 70) agingRate -= 0.1;
+        if (this.documents > 70) agingRate -= 0.05;
+        if (this.home > 70) agingRate -= 0.15;
 
         if (this.health < 40) agingRate += 0.3;
         if (this.wellbeing < 30) agingRate += 0.25;
         if (this.money < 20) agingRate += 0.2;
+        if (this.spirituality < 30) agingRate += 0.15;
+        if (this.documents < 30) agingRate += 0.1;
+        if (this.home < 30) agingRate += 0.2;
 
         this.bioAge += agingRate;
+        
+        // Varmista että biologinen ikä ei mene negatiiviseksi
+        this.bioAge = Math.max(0, this.bioAge);
+        
         this.updateLifeStage();
 
         if (this.age > 40) {
@@ -114,40 +125,205 @@ class Game {
     }
 
     setupEventListeners() {
+        console.log("Asetetaan tapahtumankuuntelijat...");
+        
         const startButton = document.getElementById("startButton");
         const nextYearButton = document.getElementById("nextYearButton");
         const restartButton = document.getElementById("restartButton");
+        const setupForm = document.getElementById("setupForm");
+        const ageInput = document.getElementById("playerAge");
+
+        console.log("Elementit:", {
+            startButton: !!startButton,
+            nextYearButton: !!nextYearButton,
+            restartButton: !!restartButton,
+            setupForm: !!setupForm,
+            ageInput: !!ageInput
+        });
 
         if (startButton) {
-            startButton.addEventListener("click", () => this.startGame());
+            startButton.addEventListener("click", () => this.showCharacterSetup());
+            console.log("Aloita-painikkeen kuuntelija asennettu");
         } else {
             console.error("Aloita-painiketta ei löytynyt!");
         }
 
+        if (setupForm) {
+            setupForm.addEventListener("submit", (e) => {
+                e.preventDefault();
+                console.log("Lomake lähetetty, estetään oletustoiminto");
+                this.handleCharacterSetup(e);
+            });
+            console.log("Asetuslomakkeen kuuntelija asennettu");
+        } else {
+            console.error("Asetuslomaketta ei löytynyt!");
+        }
+
         if (nextYearButton) {
             nextYearButton.addEventListener("click", () => this.nextYear());
+            console.log("Seuraava vuosi -painikkeen kuuntelija asennettu");
         } else {
             console.error("Seuraava vuosi -painiketta ei löytynyt!");
         }
 
         if (restartButton) {
             restartButton.addEventListener("click", () => this.restart());
+            console.log("Uudelleen-painikkeen kuuntelija asennettu");
         } else {
             console.error("Uudelleen-painiketta ei löytynyt!");
         }
 
-        console.log("Tapahtumankuuntelijat asennettu onnistuneesti");
+        // Päivitä rahan määrä kun ikä muuttuu
+        if (ageInput) {
+            ageInput.addEventListener("input", (e) => {
+                const age = parseInt(e.target.value) || 0;
+                const money = age * 500;
+                const moneyElement = document.getElementById("startingMoney");
+                console.log("Ikä muuttui:", age, "Raha:", money);
+                if (moneyElement) {
+                    moneyElement.textContent = money.toLocaleString('fi-FI');
+                } else {
+                    console.error("startingMoney-elementtiä ei löytynyt!");
+                }
+            });
+            console.log("Ikä-inputin kuuntelija asennettu");
+        } else {
+            console.error("playerAge-inputtia ei löytynyt!");
+        }
+
+        // Päivitä liukusäätimien arvot
+        const sliders = [
+            { id: "playerWellbeing", valueId: "wellbeingValue" },
+            { id: "playerEnergy", valueId: "energyValue" },
+            { id: "playerSocial", valueId: "socialValue" },
+            { id: "playerSpirituality", valueId: "spiritualityValue" },
+            { id: "playerDocuments", valueId: "documentsValue" },
+            { id: "playerHome", valueId: "homeValue" }
+        ];
+
+        sliders.forEach(slider => {
+            const input = document.getElementById(slider.id);
+            const value = document.getElementById(slider.valueId);
+            if (input && value) {
+                input.addEventListener("input", (e) => {
+                    value.textContent = e.target.value;
+                });
+            } else {
+                console.warn(`Slider ${slider.id} tai sen arvoa ei löytynyt`);
+            }
+        });
+
+        console.log("Kaikki tapahtumankuuntelijat asennettu");
+    }
+
+    showCharacterSetup() {
+        console.log("showCharacterSetup kutsuttu");
+        
+        const instructions = document.getElementById("instructions");
+        const characterSetup = document.getElementById("characterSetup");
+        
+        console.log("Elementit:", {
+            instructions: !!instructions,
+            characterSetup: !!characterSetup
+        });
+        
+        if (instructions) {
+            instructions.classList.add("hidden");
+            console.log("Ohjeet piilotettu");
+        }
+        
+        if (characterSetup) {
+            characterSetup.classList.remove("hidden");
+            console.log("Hahmon asetukset näytetty");
+        }
+        
+        // Alusta arvot
+        const ageInput = document.getElementById("playerAge");
+        const moneyElement = document.getElementById("startingMoney");
+        
+        if (ageInput && moneyElement) {
+            const age = parseInt(ageInput.value) || 0;
+            const money = age * 500;
+            moneyElement.textContent = money.toLocaleString('fi-FI');
+            console.log("Alustetaan arvot - Ikä:", age, "Raha:", money);
+        } else {
+            console.error("Alustuksessa: ageInput tai moneyElement puuttuu");
+        }
+    }
+
+    handleCharacterSetup(e) {
+        e.preventDefault();
+        console.log("handleCharacterSetup kutsuttu");
+        
+        // Hae arvot lomakkeelta
+        const ageInput = document.getElementById("playerAge");
+        const wellbeingInput = document.getElementById("playerWellbeing");
+        const energyInput = document.getElementById("playerEnergy");
+        const socialInput = document.getElementById("playerSocial");
+        const spiritualityInput = document.getElementById("playerSpirituality");
+        const documentsInput = document.getElementById("playerDocuments");
+        const homeInput = document.getElementById("playerHome");
+
+        // Tarkista että kaikki inputit löytyvät
+        const inputs = {
+            age: ageInput,
+            wellbeing: wellbeingInput,
+            energy: energyInput,
+            social: socialInput,
+            spirituality: spiritualityInput,
+            documents: documentsInput,
+            home: homeInput
+        };
+
+        console.log("Input-elementit:", inputs);
+
+        // Hae arvot
+        const age = parseInt(ageInput?.value) || 0;
+        const wellbeing = parseInt(wellbeingInput?.value) || 70;
+        const energy = parseInt(energyInput?.value) || 100;
+        const social = parseInt(socialInput?.value) || 50;
+        const spirituality = parseInt(spiritualityInput?.value) || 50;
+        const documents = parseInt(documentsInput?.value) || 50;
+        const home = parseInt(homeInput?.value) || 50;
+
+        console.log("Haetut arvot:", { age, wellbeing, energy, social, spirituality, documents, home });
+
+        // Luo hahmo annetuilla arvoilla
+        this.character = new Character(age, wellbeing, energy, social, spirituality, documents, home);
+        this.year = 0;
+        this.selectedActions = {};
+
+        console.log("Luotu hahmo:", this.character);
+
+        // Piilota asetuslomake ja näytä peli
+        const characterSetup = document.getElementById("characterSetup");
+        const gameArea = document.getElementById("gameArea");
+
+        if (characterSetup) {
+            characterSetup.classList.add("hidden");
+            console.log("Asetuslomake piilotettu");
+        }
+
+        if (gameArea) {
+            gameArea.classList.remove("hidden");
+            console.log("Pelialue näytetty");
+        }
+        
+        this.character.updateCharacterDisplay();
+        this.updateStatus();
+        this.renderActions();
+        this.addLogEntry(`Peli alkaa! Olet ${age}-vuotias ja sinulla on ${this.character.money.toLocaleString('fi-FI')} €.`);
     }
 
     getActions() {
         const baseActions = {
             "Terveystarkastus": { 
-                cost: 30, energy: -10, health: 15, wellbeing: 5, bioAge: -0.3,
-                animation: "medical", effects: "Terveys +15, Hyvinvointi +5"
+                cost: this.character.isUnder18() ? 0 : 30, energy: -10, health: 15, wellbeing: 5, bioAge: -0.3,
+                animation: "medical", visual: "medical", effects: "Terveys +15, Hyvinvointi +5"
             },
             "Liikunta": { 
                 cost: 0, energy: -20, health: 10, wellbeing: 8, bioAge: -0.4,
-                animation: "exercise", effects: "Terveys +10, Hyvinvointi +8"
+                animation: "exercise", visual: "exercise", effects: "Terveys +10, Hyvinvointi +8"
             },
             "Terveellinen ruokavalio": { 
                 cost: this.character.isUnder18() ? 0 : 15, energy: -5, health: 8, wellbeing: 5, bioAge: -0.2,
@@ -158,32 +334,44 @@ class Game {
                 animation: "medical", effects: "Terveys +12, Hyvinvointi +3"
             },
             "Meditaatio": { 
-                cost: 0, energy: -15, health: 5, wellbeing: 12, bioAge: -0.15,
-                animation: "rest", effects: "Terveys +5, Hyvinvointi +12"
+                cost: 0, energy: -15, health: 5, wellbeing: 12, spirituality: 15, bioAge: -0.15,
+                animation: "rest", effects: "Terveys +5, Hyvinvointi +12, Hengellisyys +15"
             },
             "Opiskelu": { 
                 cost: this.character.isUnder18() ? 0 : 20, energy: -25, knowledge: 15, wellbeing: -5, bioAge: -0.1,
-                animation: "study", effects: "Tietämys +15, Hyvinvointi -5"
+                animation: "study", visual: "study", effects: "Tietämys +15, Hyvinvointi -5"
             },
             "Työ": { 
                 cost: 0, energy: -30, money: 50, wellbeing: -10, bioAge: 0.1,
-                animation: "work", effects: "Raha +50, Hyvinvointi -10"
+                animation: "work", visual: "work", effects: "Raha +50, Hyvinvointi -10"
             },
             "Loma": { 
-                cost: 40, energy: 20, wellbeing: 20, bioAge: -0.2,
-                animation: "rest", effects: "Energia +20, Hyvinvointi +20"
+                cost: 40, energy: 20, wellbeing: 20, home: 10, bioAge: -0.2,
+                animation: "rest", effects: "Energia +20, Hyvinvointi +20, Koti +10"
             },
             "Ystävien tapaaminen": { 
                 cost: 10, energy: -15, social: 15, wellbeing: 12, bioAge: -0.15,
                 animation: "social", effects: "Sosiaaliset siteet +15, Hyvinvointi +12"
             },
             "Perheen kanssa": { 
-                cost: 0, energy: -10, social: 10, wellbeing: 15, bioAge: -0.2,
-                animation: "family", effects: "Sosiaaliset siteet +10, Hyvinvointi +15"
+                cost: 0, energy: -10, social: 10, wellbeing: 15, home: 5, bioAge: -0.2,
+                animation: "family", effects: "Sosiaaliset siteet +10, Hyvinvointi +15, Koti +5"
             },
             "Harrastukset": { 
                 cost: 15, energy: -20, wellbeing: 18, bioAge: -0.1,
                 animation: "hobby", effects: "Hyvinvointi +18"
+            },
+            "Rukous": { 
+                cost: 0, energy: -10, spirituality: 20, wellbeing: 10, bioAge: -0.2,
+                animation: "rest", effects: "Hengellisyys +20, Hyvinvointi +10"
+            },
+            "Asiakirjojen järjestäminen": { 
+                cost: 0, energy: -15, documents: 20, wellbeing: 5, bioAge: -0.1,
+                animation: "study", effects: "Asiakirjat +20, Hyvinvointi +5"
+            },
+            "Kunnostaminen": { 
+                cost: 100, energy: -30, home: 25, wellbeing: 15, bioAge: -0.2,
+                animation: "work", effects: "Koti +25, Hyvinvointi +15"
             },
             "Lääketieteellinen tutkimus": { 
                 cost: 80, energy: -30, health: 20, bioAge: -0.8,
@@ -256,9 +444,9 @@ class Game {
             <div class="statusItem">
                 <strong>Rahat:</strong>
                 <div class="statusBar">
-                    <div class="statusBarFill moneyBar" style="width: ${Math.min(100, this.character.money / 5)}%"></div>
+                    <div class="statusBarFill moneyBar" style="width: ${Math.min(100, this.character.money / 500)}%"></div>
                 </div>
-                <span class="statusValue">${this.character.money} €</span>
+                <span class="statusValue">${this.character.money.toLocaleString('fi-FI')} €</span>
             </div>
             <div class="statusItem">
                 <strong>Energia:</strong>
@@ -280,6 +468,27 @@ class Game {
                     <div class="statusBarFill socialBar" style="width: ${this.character.social}%"></div>
                 </div>
                 <span class="statusValue">${this.character.social.toFixed(1)}/100</span>
+            </div>
+            <div class="statusItem">
+                <strong>Hengellisyys:</strong>
+                <div class="statusBar">
+                    <div class="statusBarFill spiritualityBar" style="width: ${this.character.spirituality}%"></div>
+                </div>
+                <span class="statusValue">${this.character.spirituality.toFixed(1)}/100</span>
+            </div>
+            <div class="statusItem">
+                <strong>Asiakirjojen järjestys:</strong>
+                <div class="statusBar">
+                    <div class="statusBarFill documentsBar" style="width: ${this.character.documents}%"></div>
+                </div>
+                <span class="statusValue">${this.character.documents.toFixed(1)}/100</span>
+            </div>
+            <div class="statusItem">
+                <strong>Koti:</strong>
+                <div class="statusBar">
+                    <div class="statusBarFill homeBar" style="width: ${this.character.home}%"></div>
+                </div>
+                <span class="statusValue">${this.character.home.toFixed(1)}/100</span>
             </div>
         `;
 
@@ -306,6 +515,7 @@ class Game {
         }
 
         actionsList.innerHTML = "";
+        
         const actions = this.getActions();
 
         for (const [actionName, actionDetails] of Object.entries(actions)) {
@@ -315,7 +525,6 @@ class Game {
             const actionButton = document.createElement("button");
             actionButton.className = "actionButton";
             
-            // Lisää valintatila
             const count = this.selectedActions[actionName] || 0;
             if (count >= 3) {
                 actionButton.classList.add("selected-thrice");
@@ -326,12 +535,18 @@ class Game {
             }
             
             actionButton.disabled = this.character.money < actionDetails.cost || this.character.energy < Math.abs(actionDetails.energy);
+            
+            let buttonText = actionName;
+            if (this.character.isUnder18() && (actionName === "Terveellinen ruokavalio" || actionName === "Opiskelu" || actionName === "Terveystarkastus")) {
+                buttonText += " (ILMAINEN)";
+            }
+            
             actionButton.innerHTML = `
-                <span>${actionName} (${actionDetails.cost}€, ${actionDetails.energy} energiaa)</span>
+                <span>${buttonText} (${actionDetails.cost}€, ${actionDetails.energy} energiaa)</span>
                 ${count > 0 ? `<span class="actionCounter">${count}</span>` : ""}
             `;
             
-            actionButton.addEventListener("click", () => this.toggleAction(actionName, actionDetails.animation));
+            actionButton.addEventListener("click", () => this.toggleAction(actionName, actionDetails.animation, actionDetails.visual));
             
             const actionEffects = document.createElement("div");
             actionEffects.className = "actionEffects";
@@ -343,38 +558,63 @@ class Game {
         }
     }
 
-    toggleAction(actionName, animation) {
+    toggleAction(actionName, animation, visual) {
         if (!this.selectedActions[actionName]) {
             this.selectedActions[actionName] = 0;
         }
         
         this.selectedActions[actionName]++;
         
-        // Näytä animaatio
-        this.showCharacterAnimation(animation);
+        this.addLogEntry(`Valittu: ${actionName} (${this.selectedActions[actionName]}. kerta)`);
+        
+        this.showCharacterAnimation(animation, visual);
         
         this.renderActions();
     }
 
-    showCharacterAnimation(animationType) {
+    showCharacterAnimation(animationType, visualType) {
         const characterContainer = document.getElementById("characterContainer");
         if (!characterContainer) return;
         
-        // Poista kaikki aiemmat animaatioluokat
         characterContainer.classList.remove(
             "character-exercise", "character-eat", "character-study", 
             "character-work", "character-rest", "character-social", 
             "character-medical", "character-family", "character-hobby", 
-            "character-special", "character-bad"
+            "character-special", "character-bad",
+            "show-medical", "show-exercise", "show-study", "show-work"
         );
         
-        // Lisää uusi animaatioluokka
         characterContainer.classList.add(`character-${animationType}`);
         
-        // Poista animaatio luokka kun animaatio on päättynyt
+        if (visualType) {
+            characterContainer.classList.add(`show-${visualType}`);
+        }
+        
         setTimeout(() => {
             characterContainer.classList.remove(`character-${animationType}`);
+            if (visualType) {
+                characterContainer.classList.remove(`show-${visualType}`);
+            }
         }, 800);
+    }
+
+    forceClearActionSelection() {
+        const actionButtons = document.querySelectorAll('.actionButton');
+        actionButtons.forEach(button => {
+            button.classList.remove('selected-once', 'selected-twice', 'selected-thrice');
+            
+            const counter = button.querySelector('.actionCounter');
+            if (counter) {
+                counter.remove();
+            }
+        });
+        
+        const characterContainer = document.getElementById("characterContainer");
+        if (characterContainer) {
+            characterContainer.classList.remove(
+                "show-medical", "show-exercise", "show-study", "show-work"
+            );
+        }
     }
 
     randomEvent() {
@@ -386,7 +626,10 @@ class Game {
             { name: "Työtarjous", money: 80, energy: -20 },
             { name: "Läheisen kuolema", social: -25, wellbeing: -20, bioAge: 0.3 },
             { name: "Löytöretki", money: 50, knowledge: 10 },
-            { name: "Taidekilpailuvoitto", wellbeing: 25, money: 30 }
+            { name: "Taidekilpailuvoitto", wellbeing: 25, money: 30 },
+            { name: "Henkinen herätys", spirituality: 20, wellbeing: 15 },
+            { name: "Kotivarkaus", home: -30, wellbeing: -20 },
+            { name: "Asiakirjojen katoaminen", documents: -25, wellbeing: -10 }
         ];
 
         if (Math.random() < 0.3) {
@@ -402,7 +645,6 @@ class Game {
     }
 
     nextYear() {
-        // Suorita valitut toimenpiteet
         for (const [actionName, count] of Object.entries(this.selectedActions)) {
             const action = this.getActions()[actionName];
             
@@ -413,18 +655,20 @@ class Game {
                 this.character.wellbeing += action.wellbeing || 0;
                 this.character.knowledge += action.knowledge || 0;
                 this.character.social += action.social || 0;
+                this.character.spirituality += action.spirituality || 0;
+                this.character.documents += action.documents || 0;
+                this.character.home += action.home || 0;
                 this.character.bioAge += action.bioAge || 0;
 
                 if (action.achievement) {
                     this.character.achievements.push(action.achievement);
                     this.addLogEntry(`Saavutus: ${action.achievement}`, "success");
                 }
-
-                this.addLogEntry(`Suoritit: ${actionName}`);
             }
         }
         
         this.selectedActions = {};
+        this.forceClearActionSelection();
 
         this.randomEvent();
         this.character.ageCharacter();
@@ -436,6 +680,9 @@ class Game {
         this.character.energy = Math.max(0, Math.min(100, this.character.energy));
         this.character.social = Math.max(0, Math.min(100, this.character.social));
         this.character.knowledge = Math.max(0, this.character.knowledge);
+        this.character.spirituality = Math.max(0, Math.min(100, this.character.spirituality));
+        this.character.documents = Math.max(0, Math.min(100, this.character.documents));
+        this.character.home = Math.max(0, Math.min(100, this.character.home));
 
         this.updateStatus();
         this.renderActions();
@@ -482,14 +729,20 @@ class Game {
             <p>Elit ${this.year} vuotta</p>
             <p>Loppu hyvinvointi: ${this.character.wellbeing.toFixed(1)}/100</p>
             <p>Loppu terveys: ${this.character.health.toFixed(1)}/100</p>
+            <p>Loppu rahat: ${this.character.money.toLocaleString('fi-FI')} €</p>
+            <p>Loppu hengellisyys: ${this.character.spirituality.toFixed(1)}/100</p>
+            <p>Loppu asiakirjojen järjestys: ${this.character.documents.toFixed(1)}/100</p>
+            <p>Loppu koti: ${this.character.home.toFixed(1)}/100</p>
             ${this.character.achievements.length > 0 ? `<p><strong>Saavutukset:</strong> ${this.character.achievements.join(", ")}</p>` : ""}
             <p class="success">${message}</p>
         `;
     }
 
     restart() {
+        console.log("Käynnistetään peli uudelleen");
         document.getElementById("gameOverScreen").classList.add("hidden");
         document.getElementById("instructions").classList.remove("hidden");
+        document.getElementById("characterSetup").classList.add("hidden");
         document.getElementById("logContent").innerHTML = "";
         this.character = new Character();
         this.year = 0;
