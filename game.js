@@ -1,8 +1,5 @@
-window.addEventListener("DOMContentLoaded", () => {
-    console.log("JavaScript latautui onnistuneesti!");
-    new Game();
-});
-constructor() {
+class Character {
+    constructor() {
         this.age = 0;
         this.bioAge = 0;
         this.wellbeing = 70;
@@ -86,12 +83,41 @@ class Game {
     }
 
     init() {
-        document.getElementById("startButton").addEventListener("click", () => this.startGame());
-        document.getElementById("nextYearButton").addEventListener("click", () => this.nextYear());
-        document.getElementById("restartButton").addEventListener("click", () => this.restart());
+        if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", () => this.setupEventListeners());
+        } else {
+            this.setupEventListeners();
+        }
+    }
+
+    setupEventListeners() {
+        const startButton = document.getElementById("startButton");
+        const nextYearButton = document.getElementById("nextYearButton");
+        const restartButton = document.getElementById("restartButton");
+
+        if (startButton) {
+            startButton.addEventListener("click", () => this.startGame());
+        } else {
+            console.error("Aloita-painiketta ei löytynyt!");
+        }
+
+        if (nextYearButton) {
+            nextYearButton.addEventListener("click", () => this.nextYear());
+        } else {
+            console.error("Seuraava vuosi -painiketta ei löytynyt!");
+        }
+
+        if (restartButton) {
+            restartButton.addEventListener("click", () => this.restart());
+        } else {
+            console.error("Uudelleen-painiketta ei löytynyt!");
+        }
+
+        console.log("Tapahtumankuuntelijat asennettu onnistuneesti");
     }
 
     startGame() {
+        console.log("Peli käynnistyy...");
         document.getElementById("instructions").classList.add("hidden");
         document.getElementById("gameArea").classList.remove("hidden");
         this.updateStatus();
@@ -101,6 +127,11 @@ class Game {
 
     updateStatus() {
         const statusInfo = document.getElementById("statusInfo");
+        if (!statusInfo) {
+            console.error("Tila-paneelia ei löytynyt!");
+            return;
+        }
+
         statusInfo.innerHTML = `
             <div class="statusItem"><strong>Vuosi:</strong> ${this.year}</div>
             <div class="statusItem"><strong>Elämänvaihe:</strong> ${this.character.lifeStage}</div>
@@ -118,7 +149,6 @@ class Game {
             statusInfo.innerHTML += `<div class="statusItem achievement"><strong>Saavutukset:</strong> ${this.character.achievements.join(", ")}</div>`;
         }
 
-        // Lisää varoitukset
         if (this.character.bioAge < this.character.age - 10) {
             this.addLogEntry("Huom! Biologinen ikäsi on paljon alhaisempi kuin fyysinen ikäsi - olet tehnyt hyviä valintoja!", "success");
         }
@@ -132,6 +162,11 @@ class Game {
 
     renderActions() {
         const actionsList = document.getElementById("actionsList");
+        if (!actionsList) {
+            console.error("Toimintalistaa ei löytynyt!");
+            return;
+        }
+
         actionsList.innerHTML = "";
 
         for (const [action, details] of Object.entries(this.actions)) {
@@ -152,7 +187,6 @@ class Game {
             this.selectedActions.push(actionName);
         }
         
-        // Päivitä painikkeiden tilat
         const buttons = document.querySelectorAll(".actionButton");
         buttons.forEach(button => {
             if (button.textContent.startsWith(actionName)) {
@@ -186,9 +220,99 @@ class Game {
     }
 
     nextYear() {
-        // Suorita valitut toimenpiteet
         for (const actionName of this.selectedActions) {
             const action = this.actions[actionName];
             this.character.money -= action.cost || 0;
             this.character.energy += action.energy || 0;
-            this.character.health
+            this.character.health += action.health || 0;
+            this.character.wellbeing += action.wellbeing || 0;
+            this.character.knowledge += action.knowledge || 0;
+            this.character.social += action.social || 0;
+            this.character.bioAge += action.bioAge || 0;
+
+            if (action.achievement) {
+                this.character.achievements.push(action.achievement);
+                this.addLogEntry(`Saavutus: ${action.achievement}`, "success");
+            }
+
+            this.addLogEntry(`Suoritit: ${actionName}`);
+        }
+        
+        this.selectedActions = [];
+
+        this.randomEvent();
+        this.character.ageCharacter();
+        this.year += 1;
+        this.character.energy = Math.min(100, this.character.energy + 30);
+
+        this.character.wellbeing = Math.max(0, Math.min(100, this.character.wellbeing));
+        this.character.health = Math.max(0, Math.min(100, this.character.health));
+        this.character.energy = Math.max(0, Math.min(100, this.character.energy));
+        this.character.social = Math.max(0, Math.min(100, this.character.social));
+        this.character.knowledge = Math.max(0, this.character.knowledge);
+
+        this.updateStatus();
+        this.renderActions();
+
+        if (!this.character.alive) {
+            this.gameOver();
+        }
+    }
+
+    addLogEntry(message, type = "") {
+        const logContent = document.getElementById("logContent");
+        if (!logContent) {
+            console.error("Lokia ei löytynyt!");
+            return;
+        }
+
+        const entry = document.createElement("div");
+        entry.className = "logEntry";
+        if (type) {
+            entry.classList.add(type);
+        }
+        entry.textContent = `[Vuosi ${this.year}] ${message}`;
+        logContent.appendChild(entry);
+        logContent.scrollTop = logContent.scrollHeight;
+    }
+
+    gameOver() {
+        document.getElementById("gameArea").classList.add("hidden");
+        document.getElementById("gameOverScreen").classList.remove("hidden");
+
+        let message = "";
+        if (this.character.age > 90) {
+            message = "Loistava suoritus! Elit pitkän ja täyden elämän!";
+        } else if (this.character.age > 70) {
+            message = "Hyvä suoritus! Saavutit korkean iän!";
+        } else if (this.character.age > 50) {
+            message = "Kohtalainen suoritus. Voit yrittää uudelleen tehdäksesi parempia valintoja!";
+        } else {
+            message = "Elämäsi oli lyhyt. Seuraavalla kerralla tee terveellisempiä valintoja!";
+        }
+
+        document.getElementById("finalStats").innerHTML = `
+            <p><strong>Kuolit ${this.character.age} vuotiaana</strong> (biologinen ikä ${this.character.bioAge.toFixed(1)} vuotta)</p>
+            <p>Elit ${this.year} vuotta</p>
+            <p>Loppu hyvinvointi: ${this.character.wellbeing.toFixed(1)}/100</p>
+            <p>Loppu terveys: ${this.character.health.toFixed(1)}/100</p>
+            ${this.character.achievements.length > 0 ? `<p><strong>Saavutukset:</strong> ${this.character.achievements.join(", ")}</p>` : ""}
+            <p class="success">${message}</p>
+        `;
+    }
+
+    restart() {
+        document.getElementById("gameOverScreen").classList.add("hidden");
+        document.getElementById("instructions").classList.remove("hidden");
+        document.getElementById("logContent").innerHTML = "";
+        this.character = new Character();
+        this.year = 0;
+        this.log = [];
+        this.selectedActions = [];
+    }
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+    console.log("Sivu latautui, käynnistetään peli...");
+    new Game();
+});
