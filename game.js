@@ -3,7 +3,7 @@ class Character {
         this.age = 0;
         this.bioAge = 0;
         this.wellbeing = 70;
-        this.money = 100;
+        this.money = 200; // Lisätty lähtösaldo
         this.energy = 100;
         this.knowledge = 0;
         this.social = 50;
@@ -11,17 +11,60 @@ class Character {
         this.lifeStage = "Lapsuus";
         this.alive = true;
         this.achievements = [];
+        this.characterName = "Hahmo";
+        this.previousLifeStage = "";
+    }
+
+    isUnder18() {
+        return this.age < 18;
     }
 
     updateLifeStage() {
+        this.previousLifeStage = this.lifeStage;
+        
         if (this.age < 13) {
             this.lifeStage = "Lapsuus";
+            this.characterName = "Lapsi";
         } else if (this.age < 20) {
             this.lifeStage = "Nuoruus";
+            this.characterName = "Nuori";
         } else if (this.age < 65) {
             this.lifeStage = "Aikuisuus";
+            this.characterName = "Aikuinen";
         } else {
             this.lifeStage = "Vanhuus";
+            this.characterName = "Vanhus";
+        }
+        
+        this.updateCharacterDisplay();
+    }
+
+    updateCharacterDisplay() {
+        const characterContainer = document.getElementById("characterContainer");
+        const characterInfo = document.getElementById("characterInfo");
+        
+        if (characterContainer) {
+            // Poista kaikki elämänvaihe-luokat
+            characterContainer.classList.remove("child", "teenager", "adult", "elderly");
+            
+            // Lisää oikea elämänvaihe-luokka
+            if (this.age < 13) {
+                characterContainer.classList.add("child");
+            } else if (this.age < 20) {
+                characterContainer.classList.add("teenager");
+            } else if (this.age < 65) {
+                characterContainer.classList.add("adult");
+            } else {
+                characterContainer.classList.add("elderly");
+            }
+        }
+        
+        if (characterInfo) {
+            characterInfo.innerHTML = `
+                <div>${this.characterName} - ${this.lifeStage}</div>
+                <div>Fyysinen ikä: ${this.age} vuotta</div>
+                <div>Biologinen ikä: ${this.bioAge.toFixed(1)} vuotta</div>
+            `;
         }
     }
 
@@ -58,27 +101,7 @@ class Game {
     constructor() {
         this.character = new Character();
         this.year = 0;
-        this.actions = {
-            "Terveystarkastus": { cost: 30, energy: -10, health: 15, wellbeing: 5, bioAge: -0.3 },
-            "Liikunta": { cost: 0, energy: -20, health: 10, wellbeing: 8, bioAge: -0.4 },
-            "Terveellinen ruokavalio": { cost: 15, energy: -5, health: 8, wellbeing: 5, bioAge: -0.2 },
-            "Lääkkeet": { cost: 25, energy: -5, health: 12, wellbeing: 3, bioAge: -0.25 },
-            "Meditaatio": { cost: 0, energy: -15, health: 5, wellbeing: 12, bioAge: -0.15 },
-            "Opiskelu": { cost: 20, energy: -25, knowledge: 15, wellbeing: -5, bioAge: -0.1 },
-            "Työ": { cost: 0, energy: -30, money: 50, wellbeing: -10, bioAge: 0.1 },
-            "Loma": { cost: 40, energy: 20, wellbeing: 20, bioAge: -0.2 },
-            "Ystävien tapaaminen": { cost: 10, energy: -15, social: 15, wellbeing: 12, bioAge: -0.15 },
-            "Perheen kanssa": { cost: 5, energy: -10, social: 10, wellbeing: 15, bioAge: -0.2 },
-            "Harrastukset": { cost: 15, energy: -20, wellbeing: 18, bioAge: -0.1 },
-            "Lääketieteellinen tutkimus": { cost: 80, energy: -30, health: 20, bioAge: -0.8 },
-            "Geeniterapia": { cost: 200, energy: -40, health: 30, bioAge: -1.5 },
-            "Nuoruuden lähde": { cost: 500, energy: -20, health: 25, bioAge: -2.0, achievement: "Nuoruuden lähde löydetty!" },
-            "Tupakointi": { cost: 5, energy: 5, health: -15, wellbeing: -5, bioAge: 0.5 },
-            "Alkoholi": { cost: 10, energy: -5, health: -10, wellbeing: 5, bioAge: 0.3 },
-            "Junk food": { cost: 5, energy: 5, health: -8, wellbeing: 8, bioAge: 0.2 }
-        };
-        this.log = [];
-        this.selectedActions = [];
+        this.selectedActions = {};
         this.init();
     }
 
@@ -116,10 +139,87 @@ class Game {
         console.log("Tapahtumankuuntelijat asennettu onnistuneesti");
     }
 
+    getActions() {
+        const baseActions = {
+            "Terveystarkastus": { 
+                cost: 30, energy: -10, health: 15, wellbeing: 5, bioAge: -0.3,
+                animation: "medical", effects: "Terveys +15, Hyvinvointi +5"
+            },
+            "Liikunta": { 
+                cost: 0, energy: -20, health: 10, wellbeing: 8, bioAge: -0.4,
+                animation: "exercise", effects: "Terveys +10, Hyvinvointi +8"
+            },
+            "Terveellinen ruokavalio": { 
+                cost: this.character.isUnder18() ? 0 : 15, energy: -5, health: 8, wellbeing: 5, bioAge: -0.2,
+                animation: "eat", effects: "Terveys +8, Hyvinvointi +5"
+            },
+            "Lääkkeet": { 
+                cost: 25, energy: -5, health: 12, wellbeing: 3, bioAge: -0.25,
+                animation: "medical", effects: "Terveys +12, Hyvinvointi +3"
+            },
+            "Meditaatio": { 
+                cost: 0, energy: -15, health: 5, wellbeing: 12, bioAge: -0.15,
+                animation: "rest", effects: "Terveys +5, Hyvinvointi +12"
+            },
+            "Opiskelu": { 
+                cost: this.character.isUnder18() ? 0 : 20, energy: -25, knowledge: 15, wellbeing: -5, bioAge: -0.1,
+                animation: "study", effects: "Tietämys +15, Hyvinvointi -5"
+            },
+            "Työ": { 
+                cost: 0, energy: -30, money: 50, wellbeing: -10, bioAge: 0.1,
+                animation: "work", effects: "Raha +50, Hyvinvointi -10"
+            },
+            "Loma": { 
+                cost: 40, energy: 20, wellbeing: 20, bioAge: -0.2,
+                animation: "rest", effects: "Energia +20, Hyvinvointi +20"
+            },
+            "Ystävien tapaaminen": { 
+                cost: 10, energy: -15, social: 15, wellbeing: 12, bioAge: -0.15,
+                animation: "social", effects: "Sosiaaliset siteet +15, Hyvinvointi +12"
+            },
+            "Perheen kanssa": { 
+                cost: 0, energy: -10, social: 10, wellbeing: 15, bioAge: -0.2,
+                animation: "family", effects: "Sosiaaliset siteet +10, Hyvinvointi +15"
+            },
+            "Harrastukset": { 
+                cost: 15, energy: -20, wellbeing: 18, bioAge: -0.1,
+                animation: "hobby", effects: "Hyvinvointi +18"
+            },
+            "Lääketieteellinen tutkimus": { 
+                cost: 80, energy: -30, health: 20, bioAge: -0.8,
+                animation: "medical", effects: "Terveys +20"
+            },
+            "Geeniterapia": { 
+                cost: 200, energy: -40, health: 30, bioAge: -1.5,
+                animation: "special", effects: "Terveys +30"
+            },
+            "Nuoruuden lähde": { 
+                cost: 500, energy: -20, health: 25, bioAge: -2.0, achievement: "Nuoruuden lähde löydetty!",
+                animation: "special", effects: "Terveys +25, Saavutus!"
+            },
+            "Tupakointi": { 
+                cost: 5, energy: 5, health: -15, wellbeing: -5, bioAge: 0.5,
+                animation: "bad", effects: "Terveys -15, Hyvinvointi -5"
+            },
+            "Alkoholi": { 
+                cost: 10, energy: -5, health: -10, wellbeing: 5, bioAge: 0.3,
+                animation: "bad", effects: "Terveys -10, Hyvinvointi +5"
+            },
+            "Junk food": { 
+                cost: 5, energy: 5, health: -8, wellbeing: 8, bioAge: 0.2,
+                animation: "eat", effects: "Terveys -8, Hyvinvointi +8"
+            }
+        };
+        
+        return baseActions;
+    }
+
     startGame() {
         console.log("Peli käynnistyy...");
         document.getElementById("instructions").classList.add("hidden");
         document.getElementById("gameArea").classList.remove("hidden");
+        
+        this.character.updateCharacterDisplay();
         this.updateStatus();
         this.renderActions();
         this.addLogEntry("Peli alkaa! Tee valintoja elääksesi pitkään ja hyvin.");
@@ -133,16 +233,54 @@ class Game {
         }
 
         statusInfo.innerHTML = `
-            <div class="statusItem"><strong>Vuosi:</strong> ${this.year}</div>
-            <div class="statusItem"><strong>Elämänvaihe:</strong> ${this.character.lifeStage}</div>
-            <div class="statusItem"><strong>Fyysinen ikä:</strong> ${this.character.age} vuotta</div>
-            <div class="statusItem"><strong>Biologinen ikä:</strong> ${this.character.bioAge.toFixed(1)} vuotta</div>
-            <div class="statusItem"><strong>Hyvinvointi:</strong> ${this.character.wellbeing.toFixed(1)}/100</div>
-            <div class="statusItem"><strong>Terveys:</strong> ${this.character.health.toFixed(1)}/100</div>
-            <div class="statusItem"><strong>Rahat:</strong> ${this.character.money} €</div>
-            <div class="statusItem"><strong>Energia:</strong> ${this.character.energy.toFixed(1)}/100</div>
-            <div class="statusItem"><strong>Tietämys:</strong> ${this.character.knowledge.toFixed(1)}</div>
-            <div class="statusItem"><strong>Sosiaaliset siteet:</strong> ${this.character.social.toFixed(1)}</div>
+            <div class="statusItem">
+                <strong>Vuosi:</strong> ${this.year}
+            </div>
+            <div class="statusItem">
+                <strong>Elämänvaihe:</strong> ${this.character.lifeStage}
+            </div>
+            <div class="statusItem">
+                <strong>Terveys:</strong>
+                <div class="statusBar">
+                    <div class="statusBarFill healthBar" style="width: ${this.character.health}%"></div>
+                </div>
+                <span class="statusValue">${this.character.health.toFixed(1)}/100</span>
+            </div>
+            <div class="statusItem">
+                <strong>Hyvinvointi:</strong>
+                <div class="statusBar">
+                    <div class="statusBarFill wellbeingBar" style="width: ${this.character.wellbeing}%"></div>
+                </div>
+                <span class="statusValue">${this.character.wellbeing.toFixed(1)}/100</span>
+            </div>
+            <div class="statusItem">
+                <strong>Rahat:</strong>
+                <div class="statusBar">
+                    <div class="statusBarFill moneyBar" style="width: ${Math.min(100, this.character.money / 5)}%"></div>
+                </div>
+                <span class="statusValue">${this.character.money} €</span>
+            </div>
+            <div class="statusItem">
+                <strong>Energia:</strong>
+                <div class="statusBar">
+                    <div class="statusBarFill energyBar" style="width: ${this.character.energy}%"></div>
+                </div>
+                <span class="statusValue">${this.character.energy.toFixed(1)}/100</span>
+            </div>
+            <div class="statusItem">
+                <strong>Tietämys:</strong>
+                <div class="statusBar">
+                    <div class="statusBarFill knowledgeBar" style="width: ${Math.min(100, this.character.knowledge)}%"></div>
+                </div>
+                <span class="statusValue">${this.character.knowledge.toFixed(1)}</span>
+            </div>
+            <div class="statusItem">
+                <strong>Sosiaaliset siteet:</strong>
+                <div class="statusBar">
+                    <div class="statusBarFill socialBar" style="width: ${this.character.social}%"></div>
+                </div>
+                <span class="statusValue">${this.character.social.toFixed(1)}/100</span>
+            </div>
         `;
 
         if (this.character.achievements.length > 0) {
@@ -168,31 +306,75 @@ class Game {
         }
 
         actionsList.innerHTML = "";
+        const actions = this.getActions();
 
-        for (const [action, details] of Object.entries(this.actions)) {
-            const button = document.createElement("button");
-            button.className = "actionButton";
-            button.textContent = `${action} (${details.cost}€, ${details.energy} energiaa)`;
-            button.disabled = this.character.money < details.cost || this.character.energy < Math.abs(details.energy);
-            button.addEventListener("click", () => this.toggleAction(action));
-            actionsList.appendChild(button);
+        for (const [actionName, actionDetails] of Object.entries(actions)) {
+            const actionContainer = document.createElement("div");
+            actionContainer.className = "actionContainer";
+
+            const actionButton = document.createElement("button");
+            actionButton.className = "actionButton";
+            
+            // Lisää valintatila
+            const count = this.selectedActions[actionName] || 0;
+            if (count >= 3) {
+                actionButton.classList.add("selected-thrice");
+            } else if (count >= 2) {
+                actionButton.classList.add("selected-twice");
+            } else if (count >= 1) {
+                actionButton.classList.add("selected-once");
+            }
+            
+            actionButton.disabled = this.character.money < actionDetails.cost || this.character.energy < Math.abs(actionDetails.energy);
+            actionButton.innerHTML = `
+                <span>${actionName} (${actionDetails.cost}€, ${actionDetails.energy} energiaa)</span>
+                ${count > 0 ? `<span class="actionCounter">${count}</span>` : ""}
+            `;
+            
+            actionButton.addEventListener("click", () => this.toggleAction(actionName, actionDetails.animation));
+            
+            const actionEffects = document.createElement("div");
+            actionEffects.className = "actionEffects";
+            actionEffects.innerHTML = actionDetails.effects;
+            
+            actionContainer.appendChild(actionButton);
+            actionContainer.appendChild(actionEffects);
+            actionsList.appendChild(actionContainer);
         }
     }
 
-    toggleAction(actionName) {
-        const index = this.selectedActions.indexOf(actionName);
-        if (index > -1) {
-            this.selectedActions.splice(index, 1);
-        } else {
-            this.selectedActions.push(actionName);
+    toggleAction(actionName, animation) {
+        if (!this.selectedActions[actionName]) {
+            this.selectedActions[actionName] = 0;
         }
         
-        const buttons = document.querySelectorAll(".actionButton");
-        buttons.forEach(button => {
-            if (button.textContent.startsWith(actionName)) {
-                button.style.backgroundColor = this.selectedActions.includes(actionName) ? "#28a745" : "";
-            }
-        });
+        this.selectedActions[actionName]++;
+        
+        // Näytä animaatio
+        this.showCharacterAnimation(animation);
+        
+        this.renderActions();
+    }
+
+    showCharacterAnimation(animationType) {
+        const characterContainer = document.getElementById("characterContainer");
+        if (!characterContainer) return;
+        
+        // Poista kaikki aiemmat animaatioluokat
+        characterContainer.classList.remove(
+            "character-exercise", "character-eat", "character-study", 
+            "character-work", "character-rest", "character-social", 
+            "character-medical", "character-family", "character-hobby", 
+            "character-special", "character-bad"
+        );
+        
+        // Lisää uusi animaatioluokka
+        characterContainer.classList.add(`character-${animationType}`);
+        
+        // Poista animaatio luokka kun animaatio on päättynyt
+        setTimeout(() => {
+            characterContainer.classList.remove(`character-${animationType}`);
+        }, 800);
     }
 
     randomEvent() {
@@ -220,25 +402,29 @@ class Game {
     }
 
     nextYear() {
-        for (const actionName of this.selectedActions) {
-            const action = this.actions[actionName];
-            this.character.money -= action.cost || 0;
-            this.character.energy += action.energy || 0;
-            this.character.health += action.health || 0;
-            this.character.wellbeing += action.wellbeing || 0;
-            this.character.knowledge += action.knowledge || 0;
-            this.character.social += action.social || 0;
-            this.character.bioAge += action.bioAge || 0;
+        // Suorita valitut toimenpiteet
+        for (const [actionName, count] of Object.entries(this.selectedActions)) {
+            const action = this.getActions()[actionName];
+            
+            for (let i = 0; i < count; i++) {
+                this.character.money -= action.cost || 0;
+                this.character.energy += action.energy || 0;
+                this.character.health += action.health || 0;
+                this.character.wellbeing += action.wellbeing || 0;
+                this.character.knowledge += action.knowledge || 0;
+                this.character.social += action.social || 0;
+                this.character.bioAge += action.bioAge || 0;
 
-            if (action.achievement) {
-                this.character.achievements.push(action.achievement);
-                this.addLogEntry(`Saavutus: ${action.achievement}`, "success");
+                if (action.achievement) {
+                    this.character.achievements.push(action.achievement);
+                    this.addLogEntry(`Saavutus: ${action.achievement}`, "success");
+                }
+
+                this.addLogEntry(`Suoritit: ${actionName}`);
             }
-
-            this.addLogEntry(`Suoritit: ${actionName}`);
         }
         
-        this.selectedActions = [];
+        this.selectedActions = {};
 
         this.randomEvent();
         this.character.ageCharacter();
@@ -307,8 +493,7 @@ class Game {
         document.getElementById("logContent").innerHTML = "";
         this.character = new Character();
         this.year = 0;
-        this.log = [];
-        this.selectedActions = [];
+        this.selectedActions = {};
     }
 }
 

@@ -50,8 +50,281 @@ h2 {
 #gameArea {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    grid-template-rows: auto auto;
+    grid-template-rows: auto auto auto;
     gap: 20px;
+}
+
+/* Hahmon näyttö */
+#characterDisplay {
+    grid-column: span 2;
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    padding: 20px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    border: 2px solid #dee2e6;
+}
+
+#characterContainer {
+    position: relative;
+    width: 120px;
+    height: 200px;
+    margin: 0 auto 15px;
+}
+
+#characterHead {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 60px;
+    background-color: #fdbcb4;
+    border-radius: 50%;
+    z-index: 3;
+    transition: all 0.5s ease;
+}
+
+#characterBody {
+    position: absolute;
+    top: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 100px;
+    background-color: #4169e1;
+    border-radius: 20px 20px 0 0;
+    z-index: 2;
+    transition: all 0.5s ease;
+}
+
+#characterArms {
+    position: absolute;
+    top: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 15px;
+    background-color: #fdbcb4;
+    border-radius: 10px;
+    z-index: 1;
+    transition: all 0.5s ease;
+}
+
+#characterLegs {
+    position: absolute;
+    top: 140px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 60px;
+    background-color: #2f4f4f;
+    border-radius: 0 0 10px 10px;
+    z-index: 1;
+    transition: all 0.5s ease;
+}
+
+/* Hahmon elämänvaiheiden muutokset */
+.child #characterHead {
+    width: 50px;
+    height: 50px;
+}
+
+.child #characterBody {
+    width: 60px;
+    height: 70px;
+    top: 40px;
+}
+
+.child #characterArms {
+    width: 90px;
+    top: 50px;
+}
+
+.child #characterLegs {
+    width: 40px;
+    height: 50px;
+    top: 100px;
+}
+
+.teenager #characterHead {
+    width: 55px;
+    height: 55px;
+}
+
+.teenager #characterBody {
+    width: 70px;
+    height: 85px;
+    top: 45px;
+}
+
+.teenager #characterArms {
+    width: 105px;
+    top: 55px;
+}
+
+.teenager #characterLegs {
+    width: 50px;
+    height: 55px;
+    top: 120px;
+}
+
+.adult #characterHead {
+    width: 60px;
+    height: 60px;
+}
+
+.adult #characterBody {
+    width: 80px;
+    height: 100px;
+    top: 50px;
+}
+
+.adult #characterArms {
+    width: 120px;
+    top: 60px;
+}
+
+.adult #characterLegs {
+    width: 60px;
+    height: 60px;
+    top: 140px;
+}
+
+.elderly #characterHead {
+    width: 55px;
+    height: 55px;
+    background-color: #f5deb3;
+}
+
+.elderly #characterBody {
+    width: 75px;
+    height: 90px;
+    top: 45px;
+    background-color: #6495ed;
+}
+
+.elderly #characterArms {
+    width: 110px;
+    top: 55px;
+}
+
+.elderly #characterLegs {
+    width: 55px;
+    height: 55px;
+    top: 125px;
+}
+
+/* Hahmon animaatiot */
+.character-exercise {
+    animation: exercise 0.8s ease-in-out;
+}
+
+.character-eat {
+    animation: eat 0.8s ease-in-out;
+}
+
+.character-study {
+    animation: study 0.8s ease-in-out;
+}
+
+.character-work {
+    animation: work 0.8s ease-in-out;
+}
+
+.character-rest {
+    animation: rest 0.8s ease-in-out;
+}
+
+.character-social {
+    animation: social 0.8s ease-in-out;
+}
+
+.character-medical {
+    animation: medical 0.8s ease-in-out;
+}
+
+.character-family {
+    animation: family 0.8s ease-in-out;
+}
+
+.character-hobby {
+    animation: hobby 0.8s ease-in-out;
+}
+
+.character-special {
+    animation: special 0.8s ease-in-out;
+}
+
+.character-bad {
+    animation: bad 0.8s ease-in-out;
+}
+
+@keyframes exercise {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    25% { transform: translateX(-50%) translateY(-10px); }
+    75% { transform: translateX(-50%) translateY(10px); }
+}
+
+@keyframes eat {
+    0%, 100% { transform: translateX(-50%) scale(1); }
+    50% { transform: translateX(-50%) scale(1.1); }
+}
+
+@keyframes study {
+    0%, 100% { transform: translateX(-50%) rotate(0deg); }
+    25% { transform: translateX(-50%) rotate(-5deg); }
+    75% { transform: translateX(-50%) rotate(5deg); }
+}
+
+@keyframes work {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(5px); }
+}
+
+@keyframes rest {
+    0%, 100% { transform: translateX(-50%) scale(1); }
+    50% { transform: translateX(-50%) scale(0.95); }
+}
+
+@keyframes social {
+    0%, 100% { transform: translateX(-50%) rotate(0deg); }
+    50% { transform: translateX(-50%) rotate(10deg); }
+}
+
+@keyframes medical {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    25% { transform: translateX(-50%) translateY(-5px); }
+    75% { transform: translateX(-50%) translateY(5px); }
+}
+
+@keyframes family {
+    0%, 100% { transform: translateX(-50%) scale(1); }
+    50% { transform: translateX(-50%) scale(1.05); }
+}
+
+@keyframes hobby {
+    0%, 100% { transform: translateX(-50%) rotate(0deg); }
+    25% { transform: translateX(-50%) rotate(-10deg); }
+    75% { transform: translateX(-50%) rotate(10deg); }
+}
+
+@keyframes special {
+    0%, 100% { transform: translateX(-50%) scale(1); opacity: 1; }
+    50% { transform: translateX(-50%) scale(1.2); opacity: 0.8; }
+}
+
+@keyframes bad {
+    0%, 100% { transform: translateX(-50%) rotate(0deg); }
+    25% { transform: translateX(-50%) rotate(-15deg); }
+    75% { transform: translateX(-50%) rotate(15deg); }
+}
+
+#characterInfo {
+    font-size: 18px;
+    font-weight: bold;
+    color: #495057;
+    margin-top: 10px;
 }
 
 #statusPanel, #actionsPanel, #eventLog {
@@ -86,11 +359,53 @@ h2 {
     margin-bottom: 5px;
 }
 
+/* Visuaaliset mittarit */
+.statusBar {
+    width: 100%;
+    height: 20px;
+    background-color: #dee2e6;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-top: 5px;
+}
+
+.statusBarFill {
+    height: 100%;
+    border-radius: 10px;
+    transition: width 0.5s ease;
+}
+
+.healthBar { background-color: #28a745; }
+.wellbeingBar { background-color: #17a2b8; }
+.energyBar { background-color: #ffc107; }
+.moneyBar { background-color: #6c757d; }
+.knowledgeBar { background-color: #6610f2; }
+.socialBar { background-color: #e83e8c; }
+
+.statusValue {
+    font-weight: bold;
+    float: right;
+    margin-top: -2px;
+}
+
 #actionsList {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 12px;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 15px;
     margin-bottom: 20px;
+}
+
+.actionContainer {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.actionContainer:hover {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
 .actionButton {
@@ -98,24 +413,60 @@ h2 {
     color: white;
     border: none;
     padding: 12px;
-    border-radius: 8px;
     cursor: pointer;
     transition: all 0.3s ease;
     font-weight: bold;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    text-align: left;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .actionButton:hover {
     background: linear-gradient(135deg, #2c3e50, #1a2a6c);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 8px rgba(0,0,0,0.15);
 }
 
 .actionButton:disabled {
     background: #cccccc;
     cursor: not-allowed;
-    transform: none;
-    box-shadow: none;
+}
+
+.actionButton.selected-once {
+    background: linear-gradient(135deg, #28a745, #20c997);
+}
+
+.actionButton.selected-twice {
+    background: linear-gradient(135deg, #ffc107, #fd7e14);
+}
+
+.actionButton.selected-thrice {
+    background: linear-gradient(135deg, #dc3545, #e83e8c);
+}
+
+.actionCounter {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+}
+
+.actionEffects {
+    padding: 10px;
+    background-color: #f8f9fa;
+    font-size: 12px;
+    color: #495057;
+}
+
+.effectPositive {
+    color: #28a745;
+}
+
+.effectNegative {
+    color: #dc3545;
 }
 
 #nextYearButton, #startButton, #restartButton {
