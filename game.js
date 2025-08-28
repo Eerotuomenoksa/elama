@@ -1,5 +1,8 @@
-class Character {
-    constructor() {
+window.addEventListener("DOMContentLoaded", () => {
+    console.log("JavaScript latautui onnistuneesti!");
+    new Game();
+});
+constructor() {
         this.age = 0;
         this.bioAge = 0;
         this.wellbeing = 70;
