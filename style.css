@@ -1,0 +1,197 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+    margin: 0;
+    padding: 20px;
+    color: #333;
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background-color: rgba(255, 255, 255, 0.95);
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+h1 {
+    text-align: center;
+    color: #1a2a6c;
+    margin-bottom: 30px;
+    font-size: 2.5em;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+}
+
+h2 {
+    color: #b21f1f;
+    border-bottom: 2px solid #fdbb2d;
+    padding-bottom: 10px;
+    margin-top: 0;
+}
+
+#instructions {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+    border-left: 5px solid #1a2a6c;
+}
+
+#instructions ul {
+    padding-left: 20px;
+}
+
+#instructions li {
+    margin-bottom: 8px;
+}
+
+#gameArea {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 20px;
+}
+
+#statusPanel, #actionsPanel, #eventLog {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+#eventLog {
+    grid-column: span 2;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+#statusInfo {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+
+.statusItem {
+    background-color: #e9ecef;
+    padding: 12px;
+    border-radius: 8px;
+    border-left: 4px solid #1a2a6c;
+}
+
+.statusItem strong {
+    color: #1a2a6c;
+    display: block;
+    margin-bottom: 5px;
+}
+
+#actionsList {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.actionButton {
+    background: linear-gradient(135deg, #1a2a6c, #2c3e50);
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: bold;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.actionButton:hover {
+    background: linear-gradient(135deg, #2c3e50, #1a2a6c);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 8px rgba(0,0,0,0.15);
+}
+
+.actionButton:disabled {
+    background: #cccccc;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+#nextYearButton, #startButton, #restartButton {
+    background: linear-gradient(135deg, #b21f1f, #e74c3c);
+    color: white;
+    border: none;
+    padding: 15px 25px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+#nextYearButton:hover, #startButton:hover, #restartButton:hover {
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 8px rgba(0,0,0,0.15);
+}
+
+#logContent {
+    background-color: #f1f3f5;
+    padding: 15px;
+    border-radius: 8px;
+    max-height: 150px;
+    overflow-y: auto;
+    border: 1px solid #dee2e6;
+}
+
+.logEntry {
+    margin-bottom: 8px;
+    padding: 8px;
+    border-bottom: 1px solid #dee2e6;
+}
+
+#gameOverScreen {
+    text-align: center;
+    padding: 30px;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+#finalStats {
+    background-color: #e9ecef;
+    padding: 20px;
+    border-radius: 8px;
+    margin: 20px 0;
+    text-align: left;
+    display: inline-block;
+    min-width: 300px;
+}
+
+#finalStats p {
+    margin: 10px 0;
+}
+
+.hidden {
+    display: none;
+}
+
+.warning {
+    color: #b21f1f;
+    font-weight: bold;
+}
+
+.success {
+    color: #28a745;
+    font-weight: bold;
+}
+
+.achievement {
+    background-color: #fff3cd;
+    border-left: 4px solid #ffc107;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+}

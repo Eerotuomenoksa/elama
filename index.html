@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elämänkaaripeli: Ajan Kiertäjä</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Elämänkaaripeli: Ajan Kiertäjä</h1>
+        <div id="instructions">
+            <h2>Ohjeet</h2>
+            <p>Tavoitteesi on elää mahdollisimman pitkään ja hyvässä kunnossa!</p>
+            <ul>
+                <li>Valitse toimenpiteitä oikealta hidastaaksesi ikääntymistä</li>
+                <li>Tasapainota terveyttä, hyvinvointia ja rahaa</li>
+                <li>Vältä haitallisia valintoja jotka nopeuttavat ikääntymistä</li>
+                <li>Biologinen ikäsi voi olla pienempi kuin fyysinen ikäsi</li>
+                <li>Peli päättyy kun hahmosi kuolee</li>
+            </ul>
+            <button id="startButton">Aloita peli</button>
+        </div>
+        
+        <div id="gameArea" class="hidden">
+            <div id="statusPanel">
+                <h2>Tilanne</h2>
+                <div id="statusInfo"></div>
+            </div>
+            
+            <div id="actionsPanel">
+                <h2>Toiminnot</h2>
+                <div id="actionsList"></div>
+                <button id="nextYearButton">Seuraava vuosi</button>
+            </div>
+            
+            <div id="eventLog">
+                <h2>Tapahtumat</h2>
+                <div id="logContent"></div>
+            </div>
+        </div>
+        
+        <div id="gameOverScreen" class="hidden">
+            <h2>Peli Päättyi</h2>
+            <div id="finalStats"></div>
+            <button id="restartButton">Pelaa uudelleen</button>
+        </div>
+    </div>
+    <script src="game.js"></script>
+</body>
+</html>
