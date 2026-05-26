@@ -4,86 +4,106 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Elämänkaaripeli: Ajan Kiertäjä</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
         <h1>Elämänkaaripeli: Ajan Kiertäjä</h1>
+
+        <!-- ── Aloitusnäyttö ── -->
         <div id="instructions">
             <h2>Ohjeet</h2>
-            <p>Tavoitteesi on elää mahdollisimman pitkään ja hyvässä kunnossa!</p>
+            <p>Tee elämänvalintoja ja seuraa, miten ne vaikuttavat biologiseen ikääntymiseesi – tiede ohjaa pelimekaniikkaa!</p>
             <ul>
-                <li>Valitse toimenpiteitä oikealta hidastaaksesi ikääntymistä</li>
-                <li>Tasapainota terveyttä, hyvinvointia ja rahaa</li>
-                <li>Vältä haitallisia valintoja jotka nopeuttavat ikääntymistä</li>
-                <li>Biologinen ikäsi voi olla pienempi kuin fyysinen ikäsi</li>
-                <li>Peli päättyy kun hahmosi kuolee</li>
+                <li>Valitse toimintoja joka vuosi – ne vaikuttavat biologiseen ikääsi tutkimusnäytön mukaan</li>
+                <li>Tasapainota terveyttä, hyvinvointia, sosiaalisuutta ja rahaa</li>
+                <li>Biologinen ikäsi voi olla pienempi kuin fyysinen – se tarkoittaa hyviä valintoja</li>
+                <li>Joka toiminnon kohdalla näkyy tieteellinen selitys sen vaikutuksista</li>
+                <li>Peli päättyy kun hahmosi kuolee tai biologinen ikä saavuttaa 100</li>
             </ul>
-            <button id="startButton">Aloita peli</button>
+            <button id="startButton" class="btn-primary">Aloita peli</button>
         </div>
-        
+
+        <!-- ── Hahmon asetukset ── -->
         <div id="characterSetup" class="hidden">
-            <h2>Aseta hahmosi tiedot</h2>
+            <h2>Aseta hahmosi lähtötilanne</h2>
             <form id="setupForm">
                 <div class="form-group">
-                    <label for="playerAge">Ikä:</label>
+                    <label for="playerAge">Ikä (vuosina)</label>
                     <input type="number" id="playerAge" min="0" max="100" value="25" required>
-                    <small>Ikäsi vuosina (0-100)</small>
+                    <small>Mistä iästä haluat aloittaa? (0–100)</small>
                 </div>
-                
+
                 <div class="form-group">
-                    <label for="playerWellbeing">Hyvinvointi:</label>
-                    <input type="range" id="playerWellbeing" min="0" max="100" value="70" required>
-                    <span id="wellbeingValue">70</span>/100
-                    <small>Kuinka hyvin voit?</small>
+                    <label for="playerWellbeing">Hyvinvointi</label>
+                    <div class="slider-row">
+                        <input type="range" id="playerWellbeing" min="0" max="100" value="70">
+                        <span id="wellbeingValue">70</span>
+                    </div>
+                    <small>Kuinka hyvä olo sinulla on?</small>
                 </div>
-                
+
                 <div class="form-group">
-                    <label for="playerEnergy">Energia:</label>
-                    <input type="range" id="playerEnergy" min="0" max="100" value="100" required>
-                    <span id="energyValue">100</span>/100
+                    <label for="playerEnergy">Energia</label>
+                    <div class="slider-row">
+                        <input type="range" id="playerEnergy" min="0" max="100" value="100">
+                        <span id="energyValue">100</span>
+                    </div>
                     <small>Kuinka paljon energiaa sinulla on?</small>
                 </div>
-                
+
                 <div class="form-group">
-                    <label for="playerSocial">Sosiaaliset siteet:</label>
-                    <input type="range" id="playerSocial" min="0" max="100" value="50" required>
-                    <span id="socialValue">50</span>/100
+                    <label for="playerSocial">Sosiaaliset siteet</label>
+                    <div class="slider-row">
+                        <input type="range" id="playerSocial" min="0" max="100" value="50">
+                        <span id="socialValue">50</span>
+                    </div>
                     <small>Kuinka vahvat sosiaaliset suhteesi ovat?</small>
                 </div>
-                
+
                 <div class="form-group">
-                    <label for="playerSpirituality">Hengellisyys:</label>
-                    <input type="range" id="playerSpirituality" min="0" max="100" value="50" required>
-                    <span id="spiritualityValue">50</span>/100
-                    <small>Kuinka hengellinen olet?</small>
+                    <label for="playerSpirituality">Hengellisyys / Tarkoituksentunne</label>
+                    <div class="slider-row">
+                        <input type="range" id="playerSpirituality" min="0" max="100" value="50">
+                        <span id="spiritualityValue">50</span>
+                    </div>
+                    <small>Kuinka vahva elämäntarkoituksesi on?</small>
                 </div>
-                
+
                 <div class="form-group">
-                    <label for="playerDocuments">Asiakirjojen järjestys:</label>
-                    <input type="range" id="playerDocuments" min="0" max="100" value="50" required>
-                    <span id="documentsValue">50</span>/100
-                    <small>Kuinka hyvin asiakirjasi ovat järjestyksessä?</small>
+                    <label for="playerDocuments">Asiakirjojen järjestys</label>
+                    <div class="slider-row">
+                        <input type="range" id="playerDocuments" min="0" max="100" value="50">
+                        <span id="documentsValue">50</span>
+                    </div>
+                    <small>Kuinka hyvin käytännön asiasi ovat kunnossa?</small>
                 </div>
-                
+
                 <div class="form-group">
-                    <label for="playerHome">Koti:</label>
-                    <input type="range" id="playerHome" min="0" max="100" value="50" required>
-                    <span id="homeValue">50</span>/100
-                    <small>Kuinka hyvä kotisi on?</small>
+                    <label for="playerHome">Koti</label>
+                    <div class="slider-row">
+                        <input type="range" id="playerHome" min="0" max="100" value="50">
+                        <span id="homeValue">50</span>
+                    </div>
+                    <small>Kuinka laadukas asuinympäristösi on?</small>
                 </div>
-                
+
                 <div class="money-info">
                     <p>Aloitusraha: <span id="startingMoney">12 500</span> €</p>
-                    <small>(500 € per ikävuosi)</small>
+                    <small>500 € per ikävuosi</small>
                 </div>
-                
-                <button type="submit">Aloita peli</button>
+
+                <button type="submit" class="btn-primary">Aloita peli →</button>
             </form>
         </div>
-        
+
+        <!-- ── Pelinäyttö ── -->
         <div id="gameArea" class="hidden">
             <div id="topSection">
+                <!-- Hahmo + nappi -->
                 <div id="characterSection">
                     <div id="characterDisplay">
                         <div id="characterContainer">
@@ -91,7 +111,6 @@
                             <div id="characterBody"></div>
                             <div id="characterArms"></div>
                             <div id="characterLegs"></div>
-                            <!-- Visuaaliset elementit -->
                             <div id="medicalTools" class="hidden">
                                 <div class="scale"></div>
                                 <div class="heightMeasure"></div>
@@ -110,35 +129,40 @@
                         <div id="characterInfo"></div>
                     </div>
                     <div id="nextYearContainer">
-                        <button id="nextYearButton">Seuraava vuosi</button>
+                        <button id="nextYearButton">Seuraava vuosi →</button>
                     </div>
                 </div>
-                
+
+                <!-- Tilanne -->
                 <div id="statusPanel">
                     <h2>Tilanne</h2>
                     <div id="statusInfo"></div>
                 </div>
             </div>
-            
+
             <div id="bottomSection">
+                <!-- Toiminnot -->
                 <div id="actionsPanel">
-                    <h2>Toiminnot</h2>
+                    <h2>Toiminnot – valitse mitä teet tänä vuonna</h2>
                     <div id="actionsList"></div>
                 </div>
-                
+
+                <!-- Tapahtumaloki -->
                 <div id="eventLog">
                     <h2>Tapahtumat</h2>
                     <div id="logContent"></div>
                 </div>
             </div>
         </div>
-        
+
+        <!-- ── Peli päättyi ── -->
         <div id="gameOverScreen" class="hidden">
-            <h2>Peli Päättyi</h2>
+            <h2>Elämäsi päättyi</h2>
             <div id="finalStats"></div>
-            <button id="restartButton">Pelaa uudelleen</button>
+            <button id="restartButton" class="btn-primary">Pelaa uudelleen</button>
         </div>
     </div>
+
     <script src="game.js"></script>
 </body>
 </html>
