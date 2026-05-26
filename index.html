@@ -35,6 +35,7 @@
                     <label for="playerAge">Ikä (vuosina)</label>
                     <input type="number" id="playerAge" min="0" max="100" value="25" required>
                     <small>Mistä iästä haluat aloittaa? (0–100)</small>
+                    <div id="stagePreview" style="margin-top:6px;font-size:0.8rem;font-weight:600;color:var(--accent);"></div>
                 </div>
 
                 <div class="form-group">
@@ -162,6 +163,31 @@
             <button id="restartButton" class="btn-primary">Pelaa uudelleen</button>
         </div>
     </div>
+
+    <!-- ── Tietolähteet & vastuuvapauslauseke ── -->
+    <footer id="gameFooter">
+        <div id="disclaimer">
+            ⚠️ <strong>Huom:</strong> Tämä on pelisimulaatio, eikä sitä voida pitää tieteellisenä tai lääketieteellisenä työkaluna.
+            Pelimekaniikka perustuu julkaistuun tutkimukseen, mutta arvot ovat yksinkertaistettuja ja suuntaa-antavia.
+            Älä tee terveyspäätöksiä pelin perusteella – konsultoi terveydenhuollon ammattilaista.
+        </div>
+        <details id="sourcesList">
+            <summary>📚 Lähteet ja tutkimukset</summary>
+            <ul>
+                <li><a href="https://researchforlife.org/blog/does-exercise-support-longevity/" target="_blank">Liikunta ja pitkäikäisyys – Research for Life</a></li>
+                <li><a href="https://www.livescience.com/health/tiny-improvements-in-sleep-nutrition-and-exercise-could-significantly-extend-lifespan-study-suggests" target="_blank">Pienet elämäntapamuutokset ja elinikä – Live Science (2026)</a></li>
+                <li><a href="https://www.cnn.com/2025/01/01/health/cigarette-smoking-life-expectancy-study-wellness" target="_blank">Tupakointi ja elinajanodote – CNN / UCL (2025)</a></li>
+                <li><a href="https://www.scientificamerican.com/article/relationships-boost-survival/" target="_blank">Sosiaaliset suhteet nostavat selviytymistä 50 % – Scientific American / Holt-Lunstad</a></li>
+                <li><a href="https://www.pbs.org/newshour/health/loneliness-poses-health-risks-as-deadly-as-smoking-u-s-surgeon-general-says" target="_blank">Yksinäisyys ja terveys – PBS / U.S. Surgeon General</a></li>
+                <li><a href="https://www.nature.com/articles/s41598-020-61241-6" target="_blank">Meditaatio ja telomeerit – Nature Scientific Reports (2020)</a></li>
+                <li><a href="https://news.harvard.edu/gazette/story/2024/06/women-who-follow-mediterranean-diet-live-longer/" target="_blank">Välimeren ruokavalio ja elinikä – Harvard Gazette (2024)</a></li>
+                <li><a href="https://link.springer.com/article/10.1186/s12916-023-02907-6" target="_blank">Alkoholi ja kuolleisuus – BMC Medicine (2023)</a></li>
+                <li><a href="https://www.mind-and-brain.institute/spirituality/purpose-in-life-and-longevity/" target="_blank">Elämäntarkoitus ja pitkäikäisyys – Mind and Brain Institute</a></li>
+                <li><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC10859326/" target="_blank">Hengellisyys ja pitkäikäisyys – PMC / Springer Nature (2024)</a></li>
+                <li><a href="https://www.thelancet.com/journals/lanhl/article/PIIS2666-7568(24)00011-4/fulltext" target="_blank">Sosiaalisuus ja elämän loppuvaiheen hyvinvointi – Lancet Healthy Longevity (2024)</a></li>
+            </ul>
+        </details>
+    </footer>
 
     <script src="game.js"></script>
 </body>

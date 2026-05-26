@@ -772,6 +772,60 @@ button {
 
 #restartButton { margin-top: 20px; width: 100%; }
 
+/* ── Footer / Tietolähteet ────────────────────────────────── */
+#gameFooter {
+  margin-top: 24px;
+  border-top: 1px solid var(--border);
+  padding-top: 16px;
+}
+
+#disclaimer {
+  background: rgba(251,191,36,0.07);
+  border: 1px solid rgba(251,191,36,0.25);
+  border-radius: var(--radius-sm);
+  padding: 12px 16px;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin-bottom: 10px;
+}
+#disclaimer strong { color: var(--yellow); }
+
+#sourcesList {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 16px;
+  font-size: 0.78rem;
+}
+
+#sourcesList summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--text-muted);
+  padding: 4px 0;
+  user-select: none;
+  list-style: none;
+}
+#sourcesList summary::-webkit-details-marker { display: none; }
+#sourcesList summary:hover { color: var(--text); }
+
+#sourcesList ul {
+  list-style: none;
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+#sourcesList li a {
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 0.76rem;
+}
+#sourcesList li a:hover { text-decoration: underline; }
+#sourcesList li::before { content: "→ "; color: var(--text-dim); }
+
 /* ── Responsive ───────────────────────────────────────────── */
 @media (max-width: 900px) {
   #topSection { grid-template-columns: 1fr; }
